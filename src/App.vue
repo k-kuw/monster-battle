@@ -1,10 +1,25 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+<header-nav></header-nav>
+
+  <main>
   <router-view/>
+</main>
+<main-footer></main-footer>
+
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import HeaderNav from './components/layouts/HeaderNav.vue'
+import MainFooter from './components/layouts/MainFooter.vue'
+
+export default defineComponent({
+  components: {
+    HeaderNav,
+    MainFooter
+  }
+})
+</script>
 
 <style>
 #app {
