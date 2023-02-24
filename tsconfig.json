@@ -25,7 +25,8 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
+    "isolatedModules": true
   },
   "include": [
     "src/**/*.ts",
