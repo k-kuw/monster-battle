@@ -14,10 +14,20 @@ export default {
     };
   },
   mutations: {
+    setHealth(state: Health, payload: number) {
+      state.health = payload;
+    },
     getDamage(state: Health, payload: number) {
+      if (state.health <= 0) {
+        state.health = 0;
+        return;
+      }
       state.health = state.health - payload;
     },
     healing(state: Health, payload: number) {
+      if (state.health >= 100) {
+        return;
+      }
       state.health = state.health + payload;
     },
     resetHealth(state: Health) {
@@ -25,6 +35,9 @@ export default {
     },
   },
   actions: {
+    setHealth(context: Context, payload: number) {
+      context.commit("setHealth", payload);
+    },
     getSmallDamage(context: Context, payload: number) {
       context.commit("getDamage", payload);
     },
