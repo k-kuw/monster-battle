@@ -2,8 +2,9 @@
   <div class="avatars">
     <div class="avatar">
       <h3>ENEMY</h3>
-      <img src="sword-man.png" alt="sword-man">
-      <health-bar :health="enemyHealth"></health-bar>
+      <img :src="imageUrl" :alt="name">
+      <health-bar></health-bar>
+      <p>{{ name }}</p>
     </div>
     <div class="avatar">
       <img src="my-attack-small.png" alt="attack">
@@ -11,7 +12,7 @@
     <div class="avatar">
       <h3>ME</h3>
       <img src="spear-man.png" alt="spear-man">
-      <health-bar :me="true" :health="myHealth"></health-bar>
+      <health-bar :me="true"></health-bar>
     </div>
   </div>
 </template>
@@ -20,16 +21,9 @@
 import { defineComponent } from 'vue';
 import HealthBar from './HealthBar.vue'
 export default defineComponent({
+  props: ['name', 'imageUrl'],
   components: {
     HealthBar
-  },
-  computed: {
-    myHealth() {
-      return this.$store.getters.currentHealth
-    },
-    enemyHealth() {
-      return this.$store.getters['enemyHealth/currentHealth']
-    }
   }
 })
 </script>

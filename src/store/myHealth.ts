@@ -22,9 +22,16 @@ const store = createStore({
   },
   mutations: {
     getDamage(state: Health, payload: number) {
+      if (state.health <= 0) {
+        state.health = 0;
+        return;
+      }
       state.health = state.health - payload;
     },
     healing(state: Health, payload: number) {
+      if (state.health >= 100) {
+        return;
+      }
       state.health = state.health + payload;
     },
     resetHealth(state: Health) {
@@ -41,8 +48,8 @@ const store = createStore({
     healing(context: Context, payload: number) {
       context.commit("healing", payload);
     },
-    resetHealth(context: Context, payload: number) {
-      context.commit("resetHealth", payload);
+    resetHealth(context) {
+      context.commit("resetHealth");
     },
   },
   getters: {

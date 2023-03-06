@@ -4,19 +4,19 @@
   <main>
   <router-view/>
 </main>
-<main-footer></main-footer>
+<the-footer></the-footer>
 
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HeaderNav from './components/layouts/HeaderNav.vue'
-import MainFooter from './components/layouts/MainFooter.vue'
+import TheFooter from './components/layouts/TheFooter.vue'
 
 export default defineComponent({
   components: {
     HeaderNav,
-    MainFooter
+    TheFooter
   }
 })
 </script>
