@@ -12,6 +12,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
+  props: ['user', 'monster'],
   inject: ['disabled'],
   computed: {
     disableCommand() {
@@ -20,11 +21,11 @@ export default defineComponent({
   },
   methods: {
     attack() {
-      this.$store.dispatch('enemyHealth/getSmallDamage', 5)
+      this.$store.dispatch('enemyHealth/getSmallDamage', this.user.atk)
       this.enemyAttack()
     },
     specialAttack() {
-      this.$store.dispatch('enemyHealth/getBigDamage', 10)
+      this.$store.dispatch('enemyHealth/getBigDamage', this.user.atk)
       this.enemyAttack()
     },
     heal() {
@@ -41,7 +42,7 @@ export default defineComponent({
       } else {
         attack = 'Big'
       }
-      this.$store.dispatch(`get${attack}Damage`, 7)
+      this.$store.dispatch(`get${attack}Damage`, this.monster.atk)
     }
   }
 })

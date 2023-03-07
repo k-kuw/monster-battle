@@ -1,19 +1,17 @@
 <template>
   <h1>Register User</h1>
-  <form>
-
+  <form @submit="registerUser">
     <div>
       <label for="name">Name</label>
-      <input type="text" name="name" id="name">
+      <input type="text" name="name" id="name" ref="name">
     </div>
-
     <div>
       <label for="email">email</label>
-      <input type="text" name="email" id="email">
+      <input type="text" name="email" id="email" ref="email">
     </div>
     <div>
-      <label for="passward">passward</label>
-      <input type="text" name="passward" id="passward">
+      <label for="password">password</label>
+      <input type="text" name="password" id="password" ref="password">
     </div>
     <p v-if="!characters">サーバーエラー（再読み込みしてください）</p>
     <ul v-else class="characters">
@@ -23,6 +21,7 @@
     </ul>
     <button>登録</button>
   </form>
+  <p v-if="notification">全ての項目を入力してください</p>
 </template>
 
 <script lang="ts">
@@ -37,10 +36,11 @@ interface Character {
 }
 
 export default defineComponent({
-  data(): { characters: Character | null, selectedCharacter: number | null } {
+  data(): { characters: Character | null, selectedCharacter: number | null, notification: boolean } {
     return {
       characters: null,
-      selectedCharacter: null
+      selectedCharacter: null,
+      notification: false
     }
   },
   components: {
@@ -48,14 +48,35 @@ export default defineComponent({
   },
   created() {
     this.axios.get('/api/characters').then(res => {
-      console.log(res.data)
       this.characters = res.data
     })
   },
   methods: {
     setCharacter(characterId: number) {
       this.selectedCharacter = characterId
-      console.log(this.selectedCharacter)
+    },
+    registerUser(event: Event) {
+      event.preventDefault()
+
+      const name = (this.$refs.name as HTMLInputElement).value
+      const email = (this.$refs.email as HTMLInputElement).value
+      const password = (this.$refs.password as HTMLInputElement).value
+
+      if (!name || !email || !password || !this.selectedCharacter) {
+        this.notification = true
+        return
+      }
+
+      const registerData = {
+        name,
+        email,
+        password,
+        characterId: this.selectedCharacter
+      }
+
+      this.axios.post('/api/register', registerData).then(() => {
+        this.notification = false
+      }).catch(err => console.log(err))
     }
   }
 })

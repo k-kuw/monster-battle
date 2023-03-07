@@ -18,11 +18,25 @@
         <li>
           <router-link to="/userInfo">UserInfo</router-link>
         </li>
+        <li>
+          <button @click="logout">Logout</button>
+        </li>
       </ul>
     </nav>
   </header>
   <hr>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+    }
+  }
+})
+</script>
 
 <style scoped>
 ul {
