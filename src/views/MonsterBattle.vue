@@ -1,13 +1,18 @@
 <template>
-  <h1>Monster Battle</h1>
+  <div v-if="!isLoggedIn">
+    <p>ログインしてください</p>
+  </div>
+  <div v-else>
   <div v-if="!monster">
     <monster-select @selectedMonster="selectedMonster"></monster-select>
   </div>
-  <div v-if="monster">
-    <battle-avatar :name="monster.name" :imageUrl="monster.imageUrl"></battle-avatar>
-    <battle-command></battle-command>
+  <div v-if="user && monster">
+    <battle-avatar :userName="user.name" :userImageUrl="user.imageUrl" :monsterName="monster.name"
+      :monsterImageUrl="monster.imageUrl"></battle-avatar>
+    <battle-command :user="user" :monster="monster"></battle-command>
   </div>
   <end-content v-if="isEnd" :isWin="isWin" @resetBattle="resetBattle"></end-content>
+</div>
 </template>
 
 <script lang="ts">
@@ -16,6 +21,16 @@ import BattleAvatar from '../components/battle/BattleAvatar.vue';
 import BattleCommand from '../components/battle/BattleCommand.vue';
 import EndContent from '../components/battle/EndContent.vue'
 import MonsterSelect from '@/components/battle/MonsterSelect.vue';
+
+interface User {
+  id: number;
+  level: number;
+  ex: number;
+  hp: number;
+  atk: number;
+  name: string;
+  imageUrl: string;
+}
 
 interface Monster {
   id: number;
@@ -33,10 +48,12 @@ export default defineComponent({
     EndContent,
     MonsterSelect
   },
-  data(): { isEnd: boolean, isWin: boolean | undefined, monster: null | Monster } {
+  data(): { isLoggedIn: boolean,isEnd: boolean, isWin: boolean | undefined, user: null | User, monster: null | Monster } {
     return {
+      isLoggedIn: false,
       isEnd: false,
       isWin: undefined,
+      user: null,
       monster: null
     }
   },
@@ -66,6 +83,24 @@ export default defineComponent({
         return
       }
       this.$store.dispatch('enemyHealth/setHealth', this.monster.hp)
+    },
+    user() {
+      if (!this.user) {
+        return
+      }
+      this.$store.dispatch('setHealth', this.user.hp)
+    },
+    isWin() {
+      if (!this.isWin || !this.monster || !this.user) {
+        return
+      }
+      this.axios.post('/api/level', {
+        id: this.user.id,
+        ex: this.monster.ex
+      }).then(res => {
+        console.log(this.monster?.ex)
+        console.log(res)
+      })
     }
   },
   provide() {
@@ -87,6 +122,16 @@ export default defineComponent({
     selectedMonster(content: Monster) {
       this.monster = content
     }
+  },
+  created() {
+    const login =  this.$store.getters.getLogin
+    this.isLoggedIn = login.isLoggedIn
+    if(!login.id) {
+      return
+    }
+    this.axios.get(`/api/user/${login.id}`).then(res => {
+      this.user = res.data
+    })
   }
 })
 </script>

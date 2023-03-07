@@ -1,8 +1,7 @@
 <template>
-  <h2>health bar</h2>
   <div>
     <label for="hp">たいりょく:&nbsp;</label>
-    <meter id="hp" min="0" :max="me ? 100 : enemyHp" low="20" high="80" optimum="90"
+    <meter id="hp" min="0" :max="me ? myHp : enemyHp" low="20" high="80" optimum="90"
       :value="me ? myHealth : enemyHealth"></meter>
   </div>
   <div v-if="me">
@@ -16,6 +15,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   data() {
     return {
+      myHp: 100,
       enemyHp: 100
     }
   },
@@ -34,6 +34,7 @@ export default defineComponent({
     }
   },
   created() {
+    this.myHp = this.$store.getters['currentHealth']
     this.enemyHp = this.$store.getters['enemyHealth/currentHealth']
   }
 })
