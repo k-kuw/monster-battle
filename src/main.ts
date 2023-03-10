@@ -6,7 +6,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 
-
+// create app, router, store接続
 const app = createApp(App)
 
 app.use(VueAxios, axios)

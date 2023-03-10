@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
-import heartModule from "./modules/heart";
 import enemyHealthModule from "./modules/enemyHealth";
+import animationModule from "./modules/animation"
 
 interface Health {
   health: number;
@@ -13,9 +13,10 @@ interface Context {
 
 const store = createStore({
   modules: {
-    heart: heartModule,
     enemyHealth: enemyHealthModule,
+    animation: animationModule
   },
+  // stateは自分の体力とログイン情報
   state() {
     return {
       health: 100,
@@ -27,9 +28,11 @@ const store = createStore({
     };
   },
   mutations: {
+    // DBのステータス情報を基に、体力を設定
     setHealth(state: Health, payload: number) {
       state.health = payload;
     },
+    // 敵からの攻撃ダメージ
     getDamage(state: Health, payload: number) {
       if (state.health <= 0) {
         state.health = 0;
@@ -37,20 +40,17 @@ const store = createStore({
       }
       state.health = state.health - payload;
     },
+    // 回復
     healing(state: Health, payload: number) {
-      if (state.health >= 100) {
-        return;
-      }
       state.health = state.health + payload;
     },
-    resetHealth(state: Health) {
-      state.health = 100;
-    },
+    // ログイン時のログイン情報の設定
     setLogin(state: Health, payload: { id: number; name: string }) {
       state.login.isLoggedIn = true;
       state.login.id = payload.id;
       state.login.name = payload.name;
     },
+    // ログアウト
     logout(state: Health) {
       state.login.isLoggedIn = false;
       state.login.id = null;
@@ -61,17 +61,16 @@ const store = createStore({
     setHealth(context: Context, payload: number) {
       context.commit("setHealth", payload);
     },
+    // 通常攻撃
     getSmallDamage(context: Context, payload: number) {
       context.commit("getDamage", payload);
     },
+    // 特殊攻撃
     getBigDamage(context: Context, payload: number) {
       context.commit("getDamage", payload * 1.2);
     },
     healing(context: Context, payload: number) {
       context.commit("healing", payload);
-    },
-    resetHealth(context) {
-      context.commit("resetHealth");
     },
     setLogin(context, payload: { id: number; name: string }) {
       context.commit("setLogin", payload);

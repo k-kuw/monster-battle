@@ -6,6 +6,7 @@ import UserInfo from "../views/UserInfo.vue";
 import MonsterBattle from "../views/MonsterBattle.vue";
 import NotFound from "../views/NotFound.vue";
 
+// ルーティング設定
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
